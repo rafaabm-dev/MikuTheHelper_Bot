@@ -7,7 +7,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
-staffrole = STAFFROLE = os.getenv("STAFFROLE")
+staffrole = int(os.getenv("STAFFROLE"))
 
 # Classe da Cog
 class Staff(commands.Cog):
@@ -16,10 +16,10 @@ class Staff(commands.Cog):
         
     # Grupo de Comandos
     staff = app_commands.Group(name="staff", description="Comandos de moderação")
-        
+    
     @staff.command(name="ajuda", description="Informações Staff")
     async def ajuda(self, interaction: discord.Interaction):
-        membrostaff = any(role.id == staffrole_id for role in interaction.user.roles)
+        membrostaff = any(role.id == staffrole for role in interaction.user.roles)
         
         embed = discord.Embed(
             title="Ajuda • Ataff", 
@@ -30,7 +30,7 @@ class Staff(commands.Cog):
         if membrostaff:
             await interaction.response.send_message(embed=embed)
         else:
-            await interaction.followup.send("Este comando é exclusivo para membros da staff!", ephemeral=True)
+            await interaction.response.send_message("Este comando é exclusivo para membros da staff!", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Staff(bot))

@@ -1,4 +1,4 @@
-# COGS: INFORMAÇÕES DO SERVIDOR
+# COGS: SERVIDOR
 
 import discord
 import os
@@ -10,12 +10,34 @@ from dotenv import load_dotenv
 load_dotenv()
 bml = GUILD = os.getenv("GUILD")
 mikuid = BOTID = os.getenv("BOTID")
+anunciarcanal = os.getenv("ANNOUNCEMENTCHANNEL")
+
 
 # Classe da Cog
 class BML(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+     
+    #Comandos de Prefixo
+    @commands.command(name="anunciar")
+    @commands.is_owner()
+    async def anunciar(self, ctx:commands.Context, titulo: str, descricao: str):
         
+        view = ui.LayoutView()
+        view.add_item(ui.TextDisplay(f"{titulo}"))
+        view.add_item(ui.Separator(spacing=discord.SeparatorSpacing.small))
+        view.add_item(ui.TextDisplay(f"{descricao}"))
+        view.add_item(ui.Separator(visible=False, spacing=discord.SeparatorSpacing.small))
+        view.add_item(ui.TextDisplay(f"-# ** *Anúncio Oficial por MikuTheHelper Bot* **"))
+        
+        anúnciocanal = await self.bot.fetch_channel(anunciarcanal)
+        
+        try:
+            await anúnciocanal.send(view=view)
+            await ctx.reply("Anúncio Enviado!")
+        except Exception as e:
+            await ctx.reply("Occoreu um erro")
+            
     # Grupo de Comandos
     bml = app_commands.Group(name="bml", description="Informações gerais do servidor")
     
