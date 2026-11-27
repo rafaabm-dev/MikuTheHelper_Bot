@@ -15,7 +15,7 @@ class BotConfig(commands.Cog):
     async def status(self, ctx:commands.Context, *,texto):
             atividade = discord.CustomActivity(status=discord.Status.do_not_disturb, name=texto)
             try:
-                await self.bot.change_presence(activity=atividade)
+                await self.bot.change_presence(status=discord.Status.do_not_disturb, activity=atividade)
                 
                 await ctx.reply("<:saba_cute:1530199260975337512> *Conectando Status...*")
             except Exception as e:
@@ -24,7 +24,11 @@ class BotConfig(commands.Cog):
     @commands.command(name="say")
     @commands.is_owner()
     async def say(self, ctx:commands.Context, *,falar):
-        await ctx.send(falar)
+        try:
+            await ctx.message.delete()
+            await ctx.send(falar)
+        except Exception as e:
+            await ctx.send("Não consegui apagar XD")
 
 async def setup(bot):
     await bot.add_cog(BotConfig(bot))
